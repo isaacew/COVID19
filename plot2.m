@@ -175,7 +175,7 @@ legend('Active Cases','Location','NorthWest')
 title(Name)
 grid on
 ylabel('Active Cases as a Fraction of total Population')
-xlabel('Days since 22 Jan 2020')
+xlabel('Date')
 % ylim([1e-8,1])
 datetick('x','mmm')
 xlim([0 numDays+60])
