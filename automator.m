@@ -252,7 +252,7 @@ recovEarth = sum(recovered.data,1);
 plot2('Earth',popEarth,casesEarth,deathEarth,recovEarth,"Globe");
 
 totalTime = toc
-% !git add .
-% !git commit -m "added todays Country data"
-% !git push
+!git add .
+!git commit -m "added todays Country data"
+!git push
 % end
