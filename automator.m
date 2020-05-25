@@ -24,12 +24,12 @@ close all
 tic
 statePlot = 1;
 % Import the data from CSV format to matlab cell or matrix 
-pops      = importdata("population/data/population.csv");
-cases     = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv");
-deaths    = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv");
-recovered = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv");
-states    = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv");
-statesD    = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv");
+pops      = importdata("populationData/data/population.csv");
+cases     = importdata("JohnsHopkinsData/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv");
+deaths    = importdata("JohnsHopkinsData/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv");
+recovered = importdata("JohnsHopkinsData/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv");
+states    = importdata("JohnsHopkinsData/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv");
+statesD    = importdata("JohnsHopkinsData/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv");
 popStates = importdata("USA.csv");
 % Gather a list of countries and provinces
 Country_cas = cases.textdata(:,2);
@@ -122,10 +122,10 @@ disp(maxCountryName)
 %
 % Import the data from CSV format to matlab cell or matrix 
 %
-pops      = importdata("population/data/population.csv");
-cases     = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv");
-deaths    = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv");
-recovered = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv");
+pops      = importdata("populationData/data/population.csv");
+cases     = importdata("JohnsHopkinsData/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv");
+deaths    = importdata("JohnsHopkinsData/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv");
+recovered = importdata("JohnsHopkinsData/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv");
 popStates = importdata("USA.csv");
 % Gather a list of countries and provinces
 Country_cas = cases.textdata(:,2);

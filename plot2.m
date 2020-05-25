@@ -15,24 +15,25 @@ DDdeaths = filter(-smooth_diff(10),1,Ddeaths);
 [maxRate,indexMaxRate] = max(Dcases);
 indexNegAcc = find(DDcases<0, 1, 'first');
 firstNegAcc = DDcases(indexNegAcc);
+numDays = 180;
 
 fig1 = figure;
 hold on
-H1=area(0:150,1*ones(size(0:150)),'FaceColor',[1 0 0],...
+H1=area(0:numDays,1*ones(size(0:numDays)),'FaceColor',[1 0 0],...
     'FaceAlpha',0.6,'EdgeColor','none');
-H1=area(0:150,0.1*ones(size(0:150)),'FaceColor',[1 1 1],...
+H1=area(0:numDays,0.1*ones(size(0:numDays)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
-H1=area(0:150,.01*ones(size(0:150)),'FaceColor',[1 1 1],...
+H1=area(0:numDays,.01*ones(size(0:numDays)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
-H1=area(0:150,0.001*ones(size(0:150)),'FaceColor',[1 1 1],...
+H1=area(0:numDays,0.001*ones(size(0:numDays)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
-H1=area(0:150,0.0001*ones(size(0:150)),'FaceColor',[1 1 1],...
+H1=area(0:numDays,0.0001*ones(size(0:numDays)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
-H1=area(0:150,0.00001*ones(size(0:150)),'FaceColor',[1 1 1],...
+H1=area(0:numDays,0.00001*ones(size(0:numDays)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
-H1=area(0:150,0.000001*ones(size(0:150)),'FaceColor',[1 1 1],...
+H1=area(0:numDays,0.000001*ones(size(0:numDays)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
-H1=area(0:150,0.0000001*ones(size(0:150)),'FaceColor',[1 1 1],...
+H1=area(0:numDays,0.0000001*ones(size(0:numDays)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
 text(2.5,1,['100% Pop: ' num2str(pop)])
 text(2.5,0.16,['10% Pop: ' num2str(floor(0.1*pop))])
@@ -54,7 +55,8 @@ end
 ffig = gcf;
 ffig.Children.YScale = 'log';
 legend([p1 p2 p3],'location','NorthEast')
-xlim([0 150])
+xlim([0 numDays])
+% xticks([-3*pi -2*pi -pi 0 pi 2*pi 3*pi])
 ylim([1e-8,1])
 grid on
 title(Name)
@@ -64,7 +66,7 @@ else
 ffig = gcf;
 ffig.Children.YScale = 'log';
 legend([p1 p2],'location','NorthEast')
-xlim([0 150])
+xlim([0 numDays])
 ylim([1e-8,1])
 grid on
 title(Name)
@@ -82,7 +84,7 @@ saveas(fig1,["Figures/"+plotType+"/"+Name+"_Cases.png"]);
 %     ffig = gcf;
 %     ffig.Children.YScale = 'linear';
 %     legend([p1 p2 p3],'location','NorthEast');
-%     xlim([0 150])
+%     xlim([0 numDays])
 %     grid on
 %     title(Name);
 %     ylabel('Number of Confirmed Cases');
@@ -91,7 +93,7 @@ saveas(fig1,["Figures/"+plotType+"/"+Name+"_Cases.png"]);
 %     ffig = gcf;
 %     ffig.Children.YScale = 'linear';
 %     legend([p1 p2],'location','NorthEast');
-%     xlim([0 150])
+%     xlim([0 numDays])
 %     grid on
 %     title(Name)
 %     ylabel('Number of Confirmed Cases');
@@ -168,30 +170,30 @@ grid on
 ylabel('Active Cases as a Fraction of total Population')
 xlabel('Days since 22 Jan 2020')
 % ylim([1e-8,1])
-xlim([0 150])
+xlim([0 numDays])
 saveas(fig7,["Figures/"+plotType+"/"+Name+"_ActiveCases.png"]);
 end
 
 
 % fig4 = figure;
 % hold on
-% H1=area(0:150,1*ones(size(0:150)),'FaceColor',[1 0 0],...
+% H1=area(0:numDays,1*ones(size(0:numDays)),'FaceColor',[1 0 0],...
 %     'FaceAlpha',0.6,'EdgeColor','none');
-% H1=area(0:150,0.1*ones(size(0:150)),'FaceColor',[1 1 1],...
+% H1=area(0:numDays,0.1*ones(size(0:numDays)),'FaceColor',[1 1 1],...
 %     'FaceAlpha',0.2,'EdgeColor','none');
-% H1=area(0:150,.01*ones(size(0:150)),'FaceColor',[1 1 1],...
+% H1=area(0:numDays,.01*ones(size(0:numDays)),'FaceColor',[1 1 1],...
 %     'FaceAlpha',0.2,'EdgeColor','none');
-% H1=area(0:150,0.001*ones(size(0:150)),'FaceColor',[1 1 1],...
+% H1=area(0:numDays,0.001*ones(size(0:numDays)),'FaceColor',[1 1 1],...
 %     'FaceAlpha',0.2,'EdgeColor','none');
-% H1=area(0:150,0.0001*ones(size(0:150)),'FaceColor',[1 1 1],...
+% H1=area(0:numDays,0.0001*ones(size(0:numDays)),'FaceColor',[1 1 1],...
 %     'FaceAlpha',0.2,'EdgeColor','none');
-% H1=area(0:150,0.00001*ones(size(0:150)),'FaceColor',[1 1 1],...
+% H1=area(0:numDays,0.00001*ones(size(0:numDays)),'FaceColor',[1 1 1],...
 %     'FaceAlpha',0.2,'EdgeColor','none');
-% H1=area(0:150,0.000001*ones(size(0:150)),'FaceColor',[1 1 1],...
+% H1=area(0:numDays,0.000001*ones(size(0:numDays)),'FaceColor',[1 1 1],...
 %     'FaceAlpha',0.2,'EdgeColor','none');
-% H1=area(0:150,0.0000001*ones(size(0:150)),'FaceColor',[1 1 1],...
+% H1=area(0:numDays,0.0000001*ones(size(0:numDays)),'FaceColor',[1 1 1],...
 %     'FaceAlpha',0.2,'EdgeColor','none');
-% text(2.5,1,['150% Pop: ' num2str(pop)])
+% text(2.5,1,['numDays% Pop: ' num2str(pop)])
 % text(2.5,0.16,['10% Pop: ' num2str(floor(0.1*pop))])
 % text(2.5,0.016,['1% Pop: ' num2str(floor(0.01*pop))])
 % text(2.5,0.0016,['0.1% Pop: ' num2str(floor(0.001*pop))])
@@ -204,7 +206,7 @@ end
 % ffig = gcf;
 % ffig.Children.YScale = 'log';
 % legend([p1 p2 p3],'location','NorthEast')
-% xlim([0 150])
+% xlim([0 numDays])
 % ylim([1e-8,1])
 % grid on
 % title(Name)
@@ -214,7 +216,7 @@ end
 % ffig = gcf;
 % ffig.Children.YScale = 'log';
 % legend([p1 p2],'location','NorthEast')
-% xlim([0 150])
+% xlim([0 numDays])
 % ylim([1e-8,1])
 % grid on
 % title(Name)
