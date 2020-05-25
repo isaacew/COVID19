@@ -77,7 +77,6 @@ title(Name)
 ylabel('Fraction of total Population')
 xlabel('Date')
 end
-datetick('x','mmm')
 xlim([0 numDays+60])
 
 saveas(fig1,["Figures/"+plotType+"/"+Name+"_Cases.png"]);

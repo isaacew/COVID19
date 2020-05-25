@@ -241,6 +241,7 @@ disp(maxCountryName)
 
 
 %% WORLD
+close all
 popEarth = 7.594e9;
 %cases     = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv");
 %deaths    = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv");
@@ -255,4 +256,4 @@ totalTime = toc
 !git add .
 !git commit -m "added todays Country data"
 !git push
-% end
+% % end
