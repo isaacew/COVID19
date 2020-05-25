@@ -56,7 +56,8 @@ ffig = gcf;
 ffig.Children.YScale = 'log';
 legend([p1 p2 p3],'location','NorthEast')
 xlim([0 numDays])
-% xticks([-3*pi -2*pi -pi 0 pi 2*pi 3*pi])
+xticks([1:numDays])
+datetick('x','mdd')
 ylim([1e-8,1])
 grid on
 title(Name)
