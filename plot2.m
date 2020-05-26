@@ -165,10 +165,10 @@ fig7 = figure();
 plot(dateVector,(cases-recovered-deaths)/pop,'b-','LineWidth',3);
 %plot(cases-deaths,'r-x','LineWidth',3); hold on
 text(2.5,1,['100% Pop: ' num2str(pop)])
-text(2.5,0.16,['10% Pop: ' num2str(floor(0.1*pop))])
-text(2.5,0.016,['1% Pop: ' num2str(floor(0.01*pop))])
-text(2.5,0.0016,['0.1% Pop: ' num2str(floor(0.001*pop))])
-text(2.5,0.00016,['0.01% Pop: ' num2str(floor(0.0001*pop))])
+text(2.5,0.1,['10% Pop: ' num2str(floor(0.1*pop))])
+text(2.5,0.01,['1% Pop: ' num2str(floor(0.01*pop))])
+text(2.5,0.001,['0.1% Pop: ' num2str(floor(0.001*pop))])
+text(2.5,0.0001,['0.01% Pop: ' num2str(floor(0.0001*pop))])
 text(numDays(end)+25,(cases(end)-recovered(end)-deaths(end))/pop,['Active: ' num2str((cases(end)-recovered(end)-deaths(end)))])
 
 legend('Active Cases','Location','NorthWest')
