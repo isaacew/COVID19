@@ -18,6 +18,11 @@ Dcases = filter(-smooth_diff(10),1,cases);
 Ddeaths = filter(-smooth_diff(10),1,deaths);
 DDcases = filter(-smooth_diff(10),1,Dcases);
 DDdeaths = filter(-smooth_diff(10),1,Ddeaths);
+
+if Dcases(end) == max(Dcases)
+   fprintf('%s is growing at its maximum rate \n',Name) 
+end
+    
 [maxRate,indexMaxRate] = max(Dcases);
 indexNegAcc = find(DDcases<0, 1, 'first');
 firstNegAcc = DDcases(indexNegAcc);
@@ -113,6 +118,7 @@ hold on
 
 plot(cases,Dcases,'k-o','DisplayName',[Name ' Confirmed Cases'],'MarkerSize',8);
 plot(cases(indexMaxRate),Dcases(indexMaxRate),'r*','MarkerSize',10,'DisplayName','Maximum Rate')
+
 legend([p1],'location','NorthWest');
 grid on
 fig3.Children.XScale = 'linear';
