@@ -44,7 +44,36 @@ State = popStates.textdata(2:end,1);
 CountryShort = unique(Country_cas);
 ProvinceShort = unique(Province);
 
+
+
 if statePlot
+    
+for i = 1:length(State)
+    fig86 = figure(86)
+    stateName = State(i);
+    stateName = stateName{1};
+    popState = popStates.data(i,1);
+    isState = strcmp(Province,stateName);
+    isState = isState(2:end);
+    stateData = states.data(isState,:);
+    stateDataDeath = statesD.data(isState,:);
+    casesState = sum(stateData,1);
+    casesStateD = sum(stateDataDeath,1);
+    %myPlot3(stateName,popState,casesState,casesStateD,[],"UnitedStates");
+end
+% ffig = gcf;
+% ffig.Children.YScale = 'linear';
+% legend('location','NorthEast')
+% grid on
+% title('State Rate Comparisons')
+% ylabel('Cases/Day')
+% xlabel('Date')
+% datetick('x','mmm')
+% numDays = length(casesState);
+% xlim([60 numDays+60])
+end
+   %% 
+    
 for i = 1:length(State)
     stateName = State(i);
     stateName = stateName{1};
@@ -56,8 +85,7 @@ for i = 1:length(State)
     casesState = sum(stateData,1);
     casesStateD = sum(stateDataDeath,1);
     close all
-    plot2(stateName,popState,casesState,casesStateD,[],"UnitedStates");
-end
+    plot2(stateName,popState,casesState,casesStateD,[],"UnitedStates"); 
 end
 %
 maxCountry = 0;
