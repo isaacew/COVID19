@@ -15,6 +15,7 @@ close all
 
 % Pull the most up-to-date information
 !git submodule update --remote
+
 [status cmdout] =  git('submodule update --remote');
 % if status = 0
 %     disp('Nothing New Reported')
