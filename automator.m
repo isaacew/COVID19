@@ -15,7 +15,9 @@ close all
 
 % Pull the most up-to-date information
 !git submodule update --remote
-
+cd('COVID-19')
+!git pull
+cd('/Users/isaac_weintraub_admin/Projects/COVID19')
 [status cmdout] =  git('submodule update --remote');
 % if status = 0
 %     disp('Nothing New Reported')
