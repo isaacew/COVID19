@@ -88,6 +88,7 @@ for i = 1:length(State)
     casesState = sum(stateData,1);
     casesStateD = sum(stateDataDeath,1);
     close all
+    plot2(stateName,popState,casesState,casesStateD,[],"UnitedStates"); 
     plot21(stateName,popState,casesState,casesStateD,[],"UnitedStates"); 
 end
 %
@@ -134,6 +135,8 @@ i = 1;
         end
         M = plot2(countryName,popCountry,casesCountry,deathsCountry,recoveredCountry,"Globe");
         figureOut = gcf;
+        M = plot21(countryName,popCountry,casesCountry,deathsCountry,recoveredCountry,"Globe");
+
     end
    
     
