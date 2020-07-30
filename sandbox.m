@@ -37,8 +37,8 @@ deaths       = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series
 recovered    = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv");
 states       = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv");
 statesD      = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv");
-us_daily     = importfile1("covid-tracking-data/data/us_daily.csv");
-states_daily = importfile2("covid-tracking-data/data/states_daily_4pm_et.csv");
+% us_daily     = importfile1("covid-tracking-data/data/us_daily.csv");
+% states_daily = importfile2("covid-tracking-data/data/states_daily_4pm_et.csv");
 
 
 %%

@@ -7,163 +7,204 @@
 % outbreak of COVID19.
 % Author: 	Isaac Weintraub
 %=========================================================================
-clear 
-clc
-close all
-% Population Information for Countries of Interest
-popUSA 		= 327.2e6; 
-popUK 		= 66.44e6;
-popOH 		= 11.69e6;  
-popIsrael 	= 8.712e6;
-popFL 		= 21.3e6;   
-popTN 		= 6.77e6;
-popSK 		= 51.47e6;
-popItaly 	=  60.48e6;
-popFr 		= 66.99e6;
-popIran 	= 81.16e6;
-popSpain 	= 46.66e6;
-popIceland 	= 364260;
-popChina 	= 1.386e9;
-popNY 		= 8.623e6;
-popEarth 	= 7.53e9;
+function [] = Main()
 
 % Pull the most up-to-date information
-% Run this the first time
-% !git clone https://github.com/CSSEGISandData/COVID-19.git
-% !git clone https://github.com/datasets/population.git
-% !git submodule add https://github.com/CSSEGISandData/COVID-19.git
-% !git submodule add https://github.com/datasets/population.git
 !git submodule update --remote
+cd('COVID-19')
+!git pull
+cd('/Users/isaac_weintraub_admin/Projects/COVID19')
+cd('covid-tracking-data')
+!git pull
+cd('/Users/isaac_weintraub_admin/Projects/COVID19')
 
-%
+[status cmdout] =  git('submodule update --remote');
+% if status = 0
+%     disp('Nothing New Reported')
+% elseif status == 1
+%     disp('Error Detected: Invalid Commmand');
+% else
+
+statePlot = 1;
 % Import the data from CSV format to matlab cell or matrix 
-%
-cases     = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv");
-deaths    = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv");
-recovered = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv");
+pops         = importdata("populationData/data/population.csv");
+cases        = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv");
+deaths       = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv");
+recovered    = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv");
+states       = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv");
+statesD      = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv");
+[date1,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,recovered1,dataQualityGrade,lastUpdateEt,dateModified,checkTimeEt,death,hospitalized,dateChecked,totalTestsViral,positiveTestsViral,negativeTestsViral,positiveCasesViral,deathConfirmed,deathProbable,fips,positiveIncrease,negativeIncrease,total,totalTestResults,totalTestResultsIncrease,posNeg,deathIncrease,hospitalizedIncrease,hash,commercialScore,negativeRegularScore,negativeScore,positiveScore,score,grade] = importfile("covid-tracking-data/data/states_daily_4pm_et.csv");
 
-Country = cases.textdata(:,2);
-Province = cases.textdata(:,1);
-
-
-% Display the Country List Allow User to Select Country of Interest
-CountryShort = unique(Country);
-ProvinceShort = unique(Province);
-
-% USA
-isUSA = strcmp(Country,'US'); 
-isUSA(200:end) = 0;      % Ignore minor outlaying islands
-isUSA = isUSA(2:end);     % Remove the header
-% Ohio
-isOH = strcmp(Province,'Ohio');
-isOH = isOH(2:end);
-% Tennessee
-isTN = strcmp(Province,'Tennessee');
-isTN = isTN(2:end);
-% FLorida
-isFL   = strcmp(Province,'Florida');
-isFL   = isFL(2:end);
-% NY
-isNY = strcmp(Province,'New York');
-isNY = isNY(2:end);
-% China
-isChina = strcmp(Country,'China');
-isChina = isChina(2:end);
-% South Korea
-isSK = strcmp(Country,'Korea, South');
-isSK = isSK(2:end);
-% Iran
-isIran = strcmp(Country,'Iran');
-isIran = isIran(2:end);
-% Italy
-isItaly = strcmp(Country,'Italy');
-isItaly = isItaly(2:end);
-% Spain
-isSpain = strcmp(Country,'Spain');
-isSpain = isSpain(2:end);
-% France
-isFrance = strcmp(Country,'France');
-isFrance = isFrance(2:end);
-% Iceland
-isIceland = strcmp(Country,'Iceland');
-isIceland = isIceland(2:end);
-% United Kingdom
-isUK = strcmp(Country,'United Kingdom');
-isUK = isUK(2:end);
-% China
-isIsrael = strcmp(Country,'Israel');
-isIsrael = isIsrael(2:end);
-% Earth
-isEarth = ones(size(isUSA));
-isEarth = isEarth(2:end);
-
-index = 0;
-for i = 3:size(cases.data,2)-1
-    
-%     casesUSA(i-2)     = sum(cases.data(isUSA,i)); 
-%     deathsUSA(i-2)    = sum(deaths.data(isUSA,i));
-%     recoveredUSA(i-2) = sum(recovered.data(isUSA,i));
-% 
-%     casesIceland(i-2)     = sum(cases.data(isIceland,i));
-%     deathsIceland(i-2)    = sum(deaths.data(isIceland,i));
-%     recoveredIceland(i-2) = sum(recovered.data(isIceland,i));
-%     
-%     casesUK(i-2) = sum(cases.data(isUK,i));
-%     deathsUK(i-2) = sum(deaths.data(isUK,i));
-%     recoveredUK(i-2) = sum(recovered.data(isUK,i));
-%     
-%     casesIsrael(i-2) = sum(cases.data(isIsrael,i));
-%     deathsIsrael(i-2) = sum(deaths.data(isIsrael,i));
-%     recoveredIsrael(i-2) = sum(recovered.data(isIsrael,i));
-%     
-%     casesItaly(i-2)     = sum(cases.data(isItaly,i));
-%     deathsItaly(i-2)    = sum(deaths.data(isItaly,i));
-%     recoveredItaly(i-2) = sum(recovered.data(isItaly,i));
-% 
-%     casesChina(i-2)     = sum(cases.data(isChina,i));
-%     deathsChina(i-2)    = sum(deaths.data(isChina,i));
-%     recoveredChina(i-2) = sum(recovered.data(isChina,i));
-%     
-%     casesOH(i-2)      = sum(cases.data(isOH,i));
-%     deathsOH(i-2)      = sum(deaths.data(isOH,i));
-%     recoveredOH(i-2)  = sum(recovered.data(isOH,i));
-%     
-%     casesFL(i-2)      = sum(cases.data(isFL,i));
-%     deathsFL(i-2)      = sum(deaths.data(isFL,i));
-%     recoveredFL(i-2)  = sum(recovered.data(isFL,i));
-%     
-%     casesNY(i-2)      = sum(cases.data(isNY,i));
-%     deathsNY(i-2)      = sum(deaths.data(isNY,i));
-%     recoveredNY(i-2)  = sum(recovered.data(isNY,i));
-%     
-%     casesTN(i-2)      = sum(cases.data(isTN,i));
-%     deathsTN(i-2)      = sum(deaths.data(isTN,i));
-%     recoveredTN(i-2)  = sum(recovered.data(isTN,i));
-    
-    
-    casesEarth(i-2)      = sum(cases.data(:,i));
-    deathsEarth(i-2)     = sum(deaths.data(:,i));
-    recoveredEarth(i-2)   = sum(recovered.data(:,i));
-    
 end
-% days = 1:length(casesUSA);
 
+function [date1,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,recovered1,dataQualityGrade,lastUpdateEt,dateModified,checkTimeEt,death,hospitalized,dateChecked,totalTestsViral,positiveTestsViral,negativeTestsViral,positiveCasesViral,deathConfirmed,deathProbable,fips,positiveIncrease,negativeIncrease,total,totalTestResults,totalTestResultsIncrease,posNeg,deathIncrease,hospitalizedIncrease,hash,commercialScore,negativeRegularScore,negativeScore,positiveScore,score,grade] = importfile(filename, startRow, endRow)
+%IMPORTFILE Import numeric data from a text file as column vectors.
+%   [DATE1,STATE,POSITIVE,NEGATIVE,PENDING,HOSPITALIZEDCURRENTLY,HOSPITALIZEDCUMULATIVE,INICUCURRENTLY,INICUCUMULATIVE,ONVENTILATORCURRENTLY,ONVENTILATORCUMULATIVE,RECOVERED1,DATAQUALITYGRADE,LASTUPDATEET,DATEMODIFIED,CHECKTIMEET,DEATH,HOSPITALIZED,DATECHECKED,TOTALTESTSVIRAL,POSITIVETESTSVIRAL,NEGATIVETESTSVIRAL,POSITIVECASESVIRAL,DEATHCONFIRMED,DEATHPROBABLE,FIPS,POSITIVEINCREASE,NEGATIVEINCREASE,TOTAL,TOTALTESTRESULTS,TOTALTESTRESULTSINCREASE,POSNEG,DEATHINCREASE,HOSPITALIZEDINCREASE,HASH,COMMERCIALSCORE,NEGATIVEREGULARSCORE,NEGATIVESCORE,POSITIVESCORE,SCORE,GRADE]
+%   = IMPORTFILE(FILENAME) Reads data from text file FILENAME for the
+%   default selection.
 %
-% Plotting the Data
-% 
-plotData('Earth',popEarth,casesEarth,deathsEarth,recoveredEarth)
-% plotData('USA',popUSA,casesUSA,deathsUSA,recoveredUSA)
-% plotData('Iceland',popIceland,casesIceland,deathsIceland,recoveredIceland)
-% plotData('Italy',popItaly,casesItaly,deathsItaly,recoveredItaly)
-% plotData('China',popChina,casesChina,deathsChina,recoveredChina)
-% plotData('United Kingdom',popUK,casesUK,deathsUK,recoveredUK)
-% plotData('Israel',popIsrael,casesIsrael,deathsIsrael,recoveredIsrael)
-% % States of USA
-% plotData('Ohio',popOH,casesOH,deathsOH,recoveredOH)
-% plotData('Florida',popFL,casesFL,deathsFL,recoveredFL)
-% plotData('New York',popNY,casesNY,deathsNY,recoveredNY)
-% plotData('Tennessee',popTN,casesTN,deathsTN,recoveredTN)
+%   [DATE1,STATE,POSITIVE,NEGATIVE,PENDING,HOSPITALIZEDCURRENTLY,HOSPITALIZEDCUMULATIVE,INICUCURRENTLY,INICUCUMULATIVE,ONVENTILATORCURRENTLY,ONVENTILATORCUMULATIVE,RECOVERED1,DATAQUALITYGRADE,LASTUPDATEET,DATEMODIFIED,CHECKTIMEET,DEATH,HOSPITALIZED,DATECHECKED,TOTALTESTSVIRAL,POSITIVETESTSVIRAL,NEGATIVETESTSVIRAL,POSITIVECASESVIRAL,DEATHCONFIRMED,DEATHPROBABLE,FIPS,POSITIVEINCREASE,NEGATIVEINCREASE,TOTAL,TOTALTESTRESULTS,TOTALTESTRESULTSINCREASE,POSNEG,DEATHINCREASE,HOSPITALIZEDINCREASE,HASH,COMMERCIALSCORE,NEGATIVEREGULARSCORE,NEGATIVESCORE,POSITIVESCORE,SCORE,GRADE]
+%   = IMPORTFILE(FILENAME, STARTROW, ENDROW) Reads data from rows STARTROW
+%   through ENDROW of text file FILENAME.
+%
+% Example:
+%   [date1,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,recovered1,dataQualityGrade,lastUpdateEt,dateModified,checkTimeEt,death,hospitalized,dateChecked,totalTestsViral,positiveTestsViral,negativeTestsViral,positiveCasesViral,deathConfirmed,deathProbable,fips,positiveIncrease,negativeIncrease,total,totalTestResults,totalTestResultsIncrease,posNeg,deathIncrease,hospitalizedIncrease,hash,commercialScore,negativeRegularScore,negativeScore,positiveScore,score,grade] = importfile('states_daily_4pm_et.csv',2, 7970);
+%
+%    See also TEXTSCAN.
+
+% Auto-generated by MATLAB on 2020/07/26 12:13:03
+
+%% Initialize variables.
+delimiter = ',';
+if nargin<=2
+    startRow = 2;
+    endRow = inf;
+end
+
+%% Read columns of data as text:
+% For more information, see the TEXTSCAN documentation.
+formatSpec = '%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%[^\n\r]';
+
+%% Open the text file.
+fileID = fopen(filename,'r');
+
+%% Read columns of data according to the format.
+% This call is based on the structure of the file used to generate this
+% code. If an error occurs for a different file, try regenerating the code
+% from the Import Tool.
+dataArray = textscan(fileID, formatSpec, endRow(1)-startRow(1)+1, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines', startRow(1)-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+for block=2:length(startRow)
+    frewind(fileID);
+    dataArrayBlock = textscan(fileID, formatSpec, endRow(block)-startRow(block)+1, 'Delimiter', delimiter, 'TextType', 'string', 'HeaderLines', startRow(block)-1, 'ReturnOnError', false, 'EndOfLine', '\r\n');
+    for col=1:length(dataArray)
+        dataArray{col} = [dataArray{col};dataArrayBlock{col}];
+    end
+end
+
+%% Close the text file.
+fclose(fileID);
+
+%% Convert the contents of columns containing numeric text to numbers.
+% Replace non-numeric text with NaN.
+raw = repmat({''},length(dataArray{1}),length(dataArray)-1);
+for col=1:length(dataArray)-1
+    raw(1:length(dataArray{col}),col) = mat2cell(dataArray{col}, ones(length(dataArray{col}), 1));
+end
+numericData = NaN(size(dataArray{1},1),size(dataArray,2));
+
+for col=[1,3,4,5,6,7,8,9,10,11,12,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,36,37,38,39,40]
+    % Converts text in the input cell array to numbers. Replaced non-numeric
+    % text with NaN.
+    rawData = dataArray{col};
+    for row=1:size(rawData, 1)
+        % Create a regular expression to detect and remove non-numeric prefixes and
+        % suffixes.
+        regexstr = '(?<prefix>.*?)(?<numbers>([-]*(\d+[\,]*)+[\.]{0,1}\d*[eEdD]{0,1}[-+]*\d*[i]{0,1})|([-]*(\d+[\,]*)*[\.]{1,1}\d+[eEdD]{0,1}[-+]*\d*[i]{0,1}))(?<suffix>.*)';
+        try
+            result = regexp(rawData(row), regexstr, 'names');
+            numbers = result.numbers;
+            
+            % Detected commas in non-thousand locations.
+            invalidThousandsSeparator = false;
+            if numbers.contains(',')
+                thousandsRegExp = '^\d+?(\,\d{3})*\.{0,1}\d*$';
+                if isempty(regexp(numbers, thousandsRegExp, 'once'))
+                    numbers = NaN;
+                    invalidThousandsSeparator = true;
+                end
+            end
+            % Convert numeric text to numbers.
+            if ~invalidThousandsSeparator
+                numbers = textscan(char(strrep(numbers, ',', '')), '%f');
+                numericData(row, col) = numbers{1};
+                raw{row, col} = numbers{1};
+            end
+        catch
+            raw{row, col} = rawData{row};
+        end
+    end
+end
+
+% Convert the contents of columns with dates to MATLAB datetimes using the
+% specified date format.
+try
+    dates{14} = datetime(dataArray{14}, 'Format', 'MM/dd/yyyy HH:mm', 'InputFormat', 'MM/dd/yyyy HH:mm');
+catch
+    try
+        % Handle dates surrounded by quotes
+        dataArray{14} = cellfun(@(x) x(2:end-1), dataArray{14}, 'UniformOutput', false);
+        dates{14} = datetime(dataArray{14}, 'Format', 'MM/dd/yyyy HH:mm', 'InputFormat', 'MM/dd/yyyy HH:mm');
+    catch
+        dates{14} = repmat(datetime([NaN NaN NaN]), size(dataArray{14}));
+    end
+end
+
+dates = dates(:,14);
+
+%% Split data into numeric and string columns.
+rawNumericColumns = raw(:, [1,3,4,5,6,7,8,9,10,11,12,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,36,37,38,39,40]);
+rawStringColumns = string(raw(:, [2,13,15,16,19,35,41]));
+
+
+%% Replace non-numeric cells with NaN
+R = cellfun(@(x) ~isnumeric(x) && ~islogical(x),rawNumericColumns); % Find non-numeric cells
+rawNumericColumns(R) = {NaN}; % Replace non-numeric cells
+
+%% Make sure any text containing <undefined> is properly converted to an <undefined> categorical
+for catIdx = [1,2,3,4,5]
+    idx = (rawStringColumns(:, catIdx) == "<undefined>");
+    rawStringColumns(idx, catIdx) = "";
+end
+
+%% Allocate imported array to column variable names
+date1 = cell2mat(rawNumericColumns(:, 1));
+state = categorical(rawStringColumns(:, 1));
+positive = cell2mat(rawNumericColumns(:, 2));
+negative = cell2mat(rawNumericColumns(:, 3));
+pending = cell2mat(rawNumericColumns(:, 4));
+hospitalizedCurrently = cell2mat(rawNumericColumns(:, 5));
+hospitalizedCumulative = cell2mat(rawNumericColumns(:, 6));
+inIcuCurrently = cell2mat(rawNumericColumns(:, 7));
+inIcuCumulative = cell2mat(rawNumericColumns(:, 8));
+onVentilatorCurrently = cell2mat(rawNumericColumns(:, 9));
+onVentilatorCumulative = cell2mat(rawNumericColumns(:, 10));
+recovered1 = cell2mat(rawNumericColumns(:, 11));
+dataQualityGrade = categorical(rawStringColumns(:, 2));
+lastUpdateEt = dates{:, 1};
+dateModified = categorical(rawStringColumns(:, 3));
+checkTimeEt = categorical(rawStringColumns(:, 4));
+death = cell2mat(rawNumericColumns(:, 12));
+hospitalized = cell2mat(rawNumericColumns(:, 13));
+dateChecked = categorical(rawStringColumns(:, 5));
+totalTestsViral = cell2mat(rawNumericColumns(:, 14));
+positiveTestsViral = cell2mat(rawNumericColumns(:, 15));
+negativeTestsViral = cell2mat(rawNumericColumns(:, 16));
+positiveCasesViral = cell2mat(rawNumericColumns(:, 17));
+deathConfirmed = cell2mat(rawNumericColumns(:, 18));
+deathProbable = cell2mat(rawNumericColumns(:, 19));
+fips = cell2mat(rawNumericColumns(:, 20));
+positiveIncrease = cell2mat(rawNumericColumns(:, 21));
+negativeIncrease = cell2mat(rawNumericColumns(:, 22));
+total = cell2mat(rawNumericColumns(:, 23));
+totalTestResults = cell2mat(rawNumericColumns(:, 24));
+totalTestResultsIncrease = cell2mat(rawNumericColumns(:, 25));
+posNeg = cell2mat(rawNumericColumns(:, 26));
+deathIncrease = cell2mat(rawNumericColumns(:, 27));
+hospitalizedIncrease = cell2mat(rawNumericColumns(:, 28));
+hash = rawStringColumns(:, 6);
+commercialScore = cell2mat(rawNumericColumns(:, 29));
+negativeRegularScore = cell2mat(rawNumericColumns(:, 30));
+negativeScore = cell2mat(rawNumericColumns(:, 31));
+positiveScore = cell2mat(rawNumericColumns(:, 32));
+score = cell2mat(rawNumericColumns(:, 33));
+grade = rawStringColumns(:, 7);
+
+% For code requiring serial dates (datenum) instead of datetime, uncomment
+% the following line(s) below to return the imported dates as datenum(s).
+
+% lastUpdateEt=datenum(lastUpdateEt);
 
 
 
+end
 
