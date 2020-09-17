@@ -52,7 +52,7 @@ ProvinceShort = unique(Province);
 if statePlot
     
 for i = 1:length(State)
-    fig86 = figure(86)
+    fig86 = figure(86);
     stateName = State(i);
     stateName = stateName{1};
     popState = popStates.data(i,1);
