@@ -40,7 +40,7 @@ hold on
 % text(dateVector(end)+3,deaths(end)./pop,['Deaths: ' num2str(deaths(end))])
 if Dcases(end) == max(Dcases)
    plot(dateVector(1:3:end),Dcases(1:3:end),'-','DisplayName',[Name],'MarkerSize',8,'LineWidth',2)
-   fprintf('%s is growing at its maximum rate \n',Name) 
+   %fprintf('%s is growing at its maximum rate \n',Name) 
 else
    plot(dateVector(1:3:end),Dcases(1:3:end),'y-','DisplayName',[Name],'MarkerSize',8,'LineWidth',2,'edgealpha',0.5) 
 end

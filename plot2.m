@@ -112,10 +112,32 @@ saveas(fig1,["Figures/"+plotType+"/"+Name+"_Cases.png"]);
 %    xlabel('Days Since Jan 22 2020')
 % end
 
+% %%% ANIMATION %%%
+% fig3 = figure;
+% hold on
+% xlim([min(cases) max(cases)]);
+% ylim([min(Dcases) max(Dcases)]);
+% ylabel('Rate Change of Cases');
+% xlabel('Number of Confirmed Cases');
+% title(Name)
+% h = animatedline('Color','k','Marker','o','MarkerSize',10,'DisplayName',[Name ' Confirmed Cases']);
+% filename = ['Figures/'+plotType+'/'+Name+'_CasesPhase.gif'];
+% fname = convertStringsToChars(filename);
+% % Need to write out
+% [A,map] = rgb2ind(frame2im(getframe),256);
+% imwrite(A,map,fname,'LoopCount',inf);
+% 
+% for k = 1:length(cases) 
+%   addpoints(h,cases(k),Dcases(k))  
+%   drawnow  
+%   % Capture the plot as an image 
+%   [A,map] = rgb2ind(frame2im(getframe),256);
+%   imwrite(A,map,fname,'gif','WriteMode','append'); 
+% end
+% %%% ANIMATION %%%
 
 fig3 = figure;
 hold on
-
 plot(cases,Dcases,'k-o','DisplayName',[Name ' Confirmed Cases'],'MarkerSize',8);
 plot(cases(indexMaxRate),Dcases(indexMaxRate),'r*','MarkerSize',10,'DisplayName','Maximum Rate')
 
@@ -128,9 +150,10 @@ ylabel('Rate Change of Cases');
 xlabel('Number of Confirmed Cases');
 saveas(fig3,["Figures/"+plotType+"/"+Name+"_CasesPhase.png"]);
 
+
 fig4 = figure;
 hold on
-plot(Dcases,DDcases,'-o','DisplayName',[Name ' Confirmed Cases'],'MarkerSize',8);
+plot(Dcases,DDcases,'-','DisplayName',[Name ' Confirmed Cases'],'MarkerSize',8);
 if ~isempty(indexMaxRate)
     plot(Dcases(indexMaxRate),DDcases(indexMaxRate),'r*','MarkerSize',10,'DisplayName','Maximum Rate')
 end
@@ -145,6 +168,23 @@ title(Name)
 ylabel('Acceleration of Confirmed Cases');
 xlabel('Rate of Confirmed Cases');
 saveas(fig4,["Figures/"+plotType+"/"+Name+"_CasesPhaseRate.png"]);
+
+h = animatedline('Color','b','LineWidth',3,...
+    'DisplayName',[Name ' Confirmed Cases'],...
+    'MaximumNumPoints',10);
+filename = ['Figures/'+plotType+'/'+Name+'_CasesPhaseRate.gif'];
+fname = convertStringsToChars(filename);
+% Need to write out
+[A,map] = rgb2ind(frame2im(getframe),256);
+imwrite(A,map,fname,'LoopCount',inf);
+for k = 1:length(Dcases) 
+  addpoints(h,Dcases(k),DDcases(k))  
+  drawnow  
+  % Capture the plot as an image 
+  [A,map] = rgb2ind(frame2im(getframe),256);
+  imwrite(A,map,fname,'gif','WriteMode','append'); 
+end
+
 
 fig5 = figure();
 hold on
