@@ -169,21 +169,21 @@ ylabel('Acceleration of Confirmed Cases');
 xlabel('Rate of Confirmed Cases');
 saveas(fig4,["Figures/"+plotType+"/"+Name+"_CasesPhaseRate.png"]);
 
-h = animatedline('Color','b','LineWidth',3,...
-    'DisplayName',[Name ' Confirmed Cases'],...
-    'MaximumNumPoints',10);
-filename = ['Figures/'+plotType+'/'+Name+'_CasesPhaseRate.gif'];
-fname = convertStringsToChars(filename);
-% Need to write out
-[A,map] = rgb2ind(frame2im(getframe),256);
-imwrite(A,map,fname,'LoopCount',inf);
-for k = 1:length(Dcases) 
-  addpoints(h,Dcases(k),DDcases(k))  
-  drawnow  
-  % Capture the plot as an image 
-  [A,map] = rgb2ind(frame2im(getframe),256);
-  imwrite(A,map,fname,'gif','WriteMode','append'); 
-end
+% % h = animatedline('Color','b','LineWidth',3,...
+% %     'DisplayName',[Name ' Confirmed Cases'],...
+% %     'MaximumNumPoints',10);
+% % filename = ['Figures/'+plotType+'/'+Name+'_CasesPhaseRate.gif'];
+% % fname = convertStringsToChars(filename);
+% % % Need to write out
+% % [A,map] = rgb2ind(frame2im(getframe),256);
+% % imwrite(A,map,fname,'LoopCount',inf);
+% % for k = 1:length(Dcases) 
+% %   addpoints(h,Dcases(k),DDcases(k))  
+% %   drawnow  
+% %   % Capture the plot as an image 
+% %   [A,map] = rgb2ind(frame2im(getframe),256);
+% %   imwrite(A,map,fname,'gif','WriteMode','append'); 
+% % end
 
 
 fig5 = figure();
