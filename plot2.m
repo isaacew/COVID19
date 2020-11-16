@@ -30,28 +30,28 @@ dateVector = 22+[1:length(cases)];
 numDays = dateVector(end)-22;
 fig1 = figure;
 hold on
-H1=area(0:numDays+60,1*ones(size(0:numDays+60)),'FaceColor',[1 0 0],...
+H1=area(0:numDays+90,1*ones(size(0:numDays+90)),'FaceColor',[1 0 0],...
     'FaceAlpha',0.6,'EdgeColor','none');
-H1=area(0:numDays+60,0.1*ones(size(0:numDays+60)),'FaceColor',[1 1 1],...
+H1=area(0:numDays+90,0.1*ones(size(0:numDays+90)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
-H1=area(0:numDays+60,.01*ones(size(0:numDays+60)),'FaceColor',[1 1 1],...
+H1=area(0:numDays+90,.01*ones(size(0:numDays+90)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
-H1=area(0:numDays+60,0.001*ones(size(0:numDays+60)),'FaceColor',[1 1 1],...
+H1=area(0:numDays+90,0.001*ones(size(0:numDays+90)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
-H1=area(0:numDays+60,0.0001*ones(size(0:numDays+60)),'FaceColor',[1 1 1],...
+H1=area(0:numDays+90,0.0001*ones(size(0:numDays+90)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
-H1=area(0:numDays+60,0.00001*ones(size(0:numDays+60)),'FaceColor',[1 1 1],...
+H1=area(0:numDays+90,0.00001*ones(size(0:numDays+90)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
-H1=area(0:numDays+60,0.000001*ones(size(0:numDays+60)),'FaceColor',[1 1 1],...
+H1=area(0:numDays+90,0.000001*ones(size(0:numDays+90)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
-H1=area(0:numDays+60,0.0000001*ones(size(0:numDays+60)),'FaceColor',[1 1 1],...
+H1=area(0:numDays+90,0.0000001*ones(size(0:numDays+90)),'FaceColor',[1 1 1],...
     'FaceAlpha',0.2,'EdgeColor','none');
 text(2.5,1,['100% Pop: ' num2str(pop)])
 text(2.5,0.16,['10% Pop: ' num2str(floor(0.1*pop))])
 text(2.5,0.016,['1% Pop: ' num2str(floor(0.01*pop))])
 text(2.5,0.0016,['0.1% Pop: ' num2str(floor(0.001*pop))])
 text(2.5,0.00016,['0.01% Pop: ' num2str(floor(0.0001*pop))])
-text(dateVector(end)+3,cases(end)./pop,['Cases: ' num2str(cases(end))])
+text(dateVector(end)+3,cases(end)./pop,{['Cases: ' num2str(cases(end))],[num2str((100*cases(end)./pop),3) '%']})
 text(dateVector(end)+3,deaths(end)./pop,['Deaths: ' num2str(deaths(end))])
 p1 = semilogy(dateVector(1:3:end),cases(1:3:end)./pop,'ko','DisplayName',[Name ' Confirmed Cases'],'MarkerSize',8);
 
@@ -83,7 +83,7 @@ ylabel('Fraction of total Population')
 xlabel('Date')
 end
 datetick('x','mmm')
-xlim([0 numDays+60])
+xlim([0 numDays+90])
 
 saveas(fig1,["Figures/"+plotType+"/"+Name+"_Cases.png"]);
 
@@ -224,7 +224,7 @@ ylabel('Active Cases as a Fraction of total Population')
 xlabel('Date')
 % ylim([1e-8,1])
 datetick('x','mmm')
-xlim([0 numDays+60])
+xlim([0 numDays+90])
 saveas(fig7,["Figures/"+plotType+"/"+Name+"_ActiveCases.png"]);
 end
 
