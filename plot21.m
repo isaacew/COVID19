@@ -66,7 +66,7 @@ if ~isempty(indexNegAcc)
     %semilogy(indexNegAcc,cases(indexNegAcc)./pop,'b*','MarkerSize',10);
 end
 ffig = gcf;
-ffig.Children.YScale = 'log';
+ffig.Children(end).YScale = 'log';
 legend([p1 p2 p3],'location','SouthEast')
 ylim([1e-8,1])
 grid on
@@ -75,7 +75,7 @@ ylabel('Fraction of total Population')
 xlabel('Date')
 else
 ffig = gcf;
-ffig.Children.YScale = 'log';
+ffig.Children(end).YScale = 'log';
 legend([p1 p2],'location','SouthEast')
 ylim([1e-8,1])
 grid on
@@ -87,7 +87,6 @@ datetick('x','mmm')
 xlim([0 numDays+60])
 
 
-
 subplot(2,2,3)
 hold on
 plot(cases,Dcases,'k-o','DisplayName',[Name ' Confirmed Cases'],'MarkerSize',8);
@@ -95,8 +94,8 @@ plot(cases(indexMaxRate),Dcases(indexMaxRate),'r*','MarkerSize',10,'DisplayName'
 
 legend([p1],'location','SouthEast');
 grid on
-fig3.Children.XScale = 'linear';
-fig3.Children.YScale = 'linear';
+% fig3.Children(end).XScale = 'linear';
+% fig3.Children(end).YScale = 'linear';
 title(Name)
 ylabel('Rate Change of Cases');
 xlabel('Number of Confirmed Cases');
@@ -113,8 +112,8 @@ if ~isempty(indexNegAcc)
 end
 legend([p1],'location','SouthEast');
 grid on
-fig4.Children.XScale = 'linear';
-fig4.Children.YScale = 'linear';
+% fig4.Children(end).XScale = 'linear';
+% fig4.Children(end).YScale = 'linear';
 title(Name)
 ylabel('Acceleration of Confirmed Cases');
 xlabel('Rate of Confirmed Cases');
