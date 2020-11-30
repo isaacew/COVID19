@@ -18,7 +18,7 @@ modelFlag = 0;
 !git submodule update --remote
 statePlot = 1;
 % Import the data from CSV format to matlab cell or matrix 
-pops      = importdata("population/data/population.csv");
+pops      = importdata("populationData/data/population.csv");
 cases     = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv");
 deaths    = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv");
 recovered = importdata("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv");
