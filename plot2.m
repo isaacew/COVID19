@@ -19,9 +19,11 @@ Ddeaths = filter(-smooth_diff(10),1,deaths);
 DDcases = filter(-smooth_diff(10),1,Dcases);
 DDdeaths = filter(-smooth_diff(10),1,Ddeaths);
 
-if Dcases(end) == max(Dcases)
-   fprintf('%s is growing at its maximum rate \n',Name) 
-end
+% if Dcases(end) == max(Dcases)
+%    fprintf('%s is growing at its maximum rate \n',Name) 
+% end
+fprintf('%s | cases: %s percent | rate: %s | accel: %s\n',Name,num2str((100*cases(end)./pop),3),num2str(floor(Dcases(end)),6),num2str(floor(DDcases(end)),6))
+
     
 [maxRate,indexMaxRate] = max(Dcases);
 indexNegAcc = find(DDcases<0, 1, 'first');
