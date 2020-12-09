@@ -13,7 +13,7 @@ clear
 clc
 close all
 usaFlag = 1;
-countryFlag = 0;
+countryFlag = 1;
 
 % Pull the most up-to-date information
 !git submodule update --remote
