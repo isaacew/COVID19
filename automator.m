@@ -12,6 +12,8 @@
 clear 
 clc
 close all
+usaFlag = 0;
+countryFlag = 0;
 
 % Pull the most up-to-date information
 !git submodule update --remote
@@ -76,7 +78,7 @@ end
 % xlim([60 numDays+60])
 end
    %% 
-    
+if usaFlag    
 for i = 1:length(State)
     stateName = State(i);
     stateName = stateName{1};
@@ -145,7 +147,7 @@ disp(maxCountryName)
 !git add .
 !git commit -m "added todays state data"
 !git push
-
+end
 %% USAAnalysis              
 % Pull the most up-to-date information
 %
@@ -211,6 +213,7 @@ end
 disp('State with Most Cases:')
 disp(maxStateName)
 
+if countryFlag
 %%
 maxCountry = 0;
 maxCountryName = '';
@@ -273,7 +276,7 @@ end
 disp('Country with Most Cases:')
 disp(maxCountryName)
 
-
+end
 %% WORLD
 close all
 popEarth = 7.594e9;
