@@ -12,7 +12,7 @@
 clear 
 clc
 close all
-usaFlag = 0;
+usaFlag = 1;
 countryFlag = 0;
 
 % Pull the most up-to-date information
