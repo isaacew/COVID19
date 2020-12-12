@@ -14,7 +14,7 @@ clc
 close all
 usaFlag = 1;
 countryFlag = 1;
-
+plotFlag = 0;
 % Pull the most up-to-date information
 !git submodule update --remote
 cd('COVID-19')
@@ -90,8 +90,8 @@ for i = 1:length(State)
     casesState = sum(stateData,1);
     casesStateD = sum(stateDataDeath,1);
     close all
-    plot2(stateName,popState,casesState,casesStateD,[],"UnitedStates"); 
-    plot21(stateName,popState,casesState,casesStateD,[],"UnitedStates"); 
+    plot2(stateName,popState,casesState,casesStateD,[],"UnitedStates",plotFlag); 
+    plot21(stateName,popState,casesState,casesStateD,[],"UnitedStates",plotFlag); 
 end
 %
 maxCountry = 0;
@@ -135,9 +135,9 @@ i = 1;
             disp(countryName)
             disp(100*casesCountry(end)./popCountry)
         end
-        M = plot2(countryName,popCountry,casesCountry,deathsCountry,recoveredCountry,"Globe");
+        plot2(countryName,popCountry,casesCountry,deathsCountry,recoveredCountry,"Globe",plotFlag);
         figureOut = gcf;
-        M = plot21(countryName,popCountry,casesCountry,deathsCountry,recoveredCountry,"Globe");
+        plot21(countryName,popCountry,casesCountry,deathsCountry,recoveredCountry,"Globe",plotFlag);
 
     end
    
@@ -257,7 +257,7 @@ for i = 1:length(CountryShort)-1
             disp(100*casesCountry(end)./popCountry)
         end
         %plotData(countr;oyName,popCountry,casesCountry,deathsCountry,recoveredCountry)
-        plot2(countryName,popCountry,casesCountry,deathsCountry,recoveredCountry,"Globe");
+        plot2(countryName,popCountry,casesCountry,deathsCountry,recoveredCountry,"Globe",plotFlag);
 %         figureOut = gcf;
 %         saveas(figureOut,['Figures/' countryName '.jpg']);
 
@@ -287,7 +287,7 @@ popEarth = 7.594e9;
 casesEarth = sum(cases.data,1);
 deathEarth = sum(deaths.data,1);
 recovEarth = sum(recovered.data,1);
-plot2('Earth',popEarth,casesEarth,deathEarth,recovEarth,"Globe");
+plot2('Earth',popEarth,casesEarth,deathEarth,recovEarth,"Globe",plotFlag);
 
 totalTime = toc
 !git add .

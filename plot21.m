@@ -1,4 +1,4 @@
-function [fig1, fig2, fig3, fig4] = plot21(Name,pop,cases,deaths,recovered,plotType)
+function [fig1, fig2, fig3, fig4] = plot21(Name,pop,cases,deaths,recovered,plotType,plotFlag)
 %--------------------------------------------------------------------------
 % plot2.m
 % 
@@ -19,10 +19,7 @@ Ddeaths = filter(-smooth_diff(10),1,deaths);
 DDcases = filter(-smooth_diff(10),1,Dcases);
 DDdeaths = filter(-smooth_diff(10),1,Ddeaths);
 
-if Dcases(end) == max(Dcases)
-   fprintf('%s is growing at its maximum rate \n',Name) 
-end
-    
+if plotFlag    
 [maxRate,indexMaxRate] = max(Dcases);
 indexNegAcc = find(DDcases<0, 1, 'first');
 firstNegAcc = DDcases(indexNegAcc);
@@ -193,5 +190,5 @@ saveas(gcf,["Figures/"+plotType+"/"+Name+"_Information.png"]);
 % xlabel('Days Since Jan 22 2020')
 % end
 % saveas(fig4,["StateFigures/"+Name+"_ActiveCases.png"])
-
+end
 end
