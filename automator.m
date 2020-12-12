@@ -12,9 +12,10 @@
 clear 
 clc
 close all
-usaFlag = 1;
-countryFlag = 1;
-plotFlag = 0;
+plotFlag = 0;       % Plots on/off
+usaFlag = 1;        % Generate the Plots and look at USA
+countryFlag = 0;    % Generate the Plots and look at all Countries
+
 % Pull the most up-to-date information
 !git submodule update --remote
 cd('COVID-19')
