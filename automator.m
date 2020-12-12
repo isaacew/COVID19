@@ -12,7 +12,7 @@
 clear 
 clc
 close all
-plotFlag = 0;       % Plots on/off
+plotFlag = 1;       % Plots on/off
 usaFlag = 1;        % Generate the Plots and look at USA
 countryFlag = 0;    % Generate the Plots and look at all Countries
 
