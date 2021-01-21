@@ -206,7 +206,7 @@ saveas(fig4,["Figures/"+plotType+"/"+Name+"_CasesPhaseRate.png"]);
 
 fig5 = figure();
 hold on
-p1 = plot(deaths,Ddeaths,'-s','DisplayName',[Name ' Confirmed Deaths'],'MarkerSize',8);
+p1 = plot(deaths(11:end),Ddeaths(11:end),'-s','DisplayName',[Name ' Confirmed Deaths'],'MarkerSize',8);
 legend([p1],'location','NorthWest');
 grid on
 title(Name)
@@ -216,7 +216,7 @@ saveas(fig5,["Figures/"+plotType+"/"+Name+"_DeathPhase.png"]);
 
 fig6 = figure();
 hold on
-p1 = plot(Ddeaths,DDdeaths,'-s','DisplayName',[Name ' Confirmed Deaths'],'MarkerSize',8);
+p1 = plot(Ddeaths(22:end),DDdeaths(22:end),'-s','DisplayName',[Name ' Confirmed Deaths'],'MarkerSize',8);
 legend([p1],'location','NorthWest');
 grid on
 title(Name)
