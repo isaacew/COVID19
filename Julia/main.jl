@@ -11,15 +11,15 @@
 cd("/Users/weintraub0/Documents/Projects/COVID19/")
 
 #run(`git fetch`)    # Get the latest data
-#using CSV           # Need to read the CSV data
+using CSV           # Need to read the CSV data
 using Plots         # Allows the genation of plots
-using DataFrames    # Used for handliong the csv file (contains strings and numbers)
+using Pandas    # Used for handliong the csv file (contains strings and numbers)
 using ProgressMeter # Used for making the progress meeter
 using DataFrames
-using Pandas
 pyplot()            # Use the python plotting backend
 include("covidPlot2.jl")
-data_popStates = CSV.read("USA.csv", DataFrame)     # Read the population data from the united states
+
+data_popStates = CSV.read("USA.csv" ; datarow = 2, delim=',')    # Read the population data from the united states
 data_casesUSA  = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv", DataFrame)
 data_deathUSA  = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv", DataFrame)
 
