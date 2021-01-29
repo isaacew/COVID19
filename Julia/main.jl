@@ -2,28 +2,44 @@
 # PROGRAM NAME: main.jl
 # DESCRIPTION:  This program reads the most recent data from
 #               the CDC and plots for data visualization purposes
-# AUTHOR:       Isaac Weintraub April 2020
+# AUTHOR:       Isaac Weintraub Jan 2021
 # VERSION	0.1
 # REQ.PACKAGES:	CSV
 #
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+cd("/Users/weintraub0/Documents/Projects/COVID19/COVID-19")
+run(`git pull`)    # Get the latest data
 cd("/Users/weintraub0/Documents/Projects/COVID19/")
-
-#run(`git fetch`)    # Get the latest data
 using CSV           # Need to read the CSV data
 using Plots         # Allows the genation of plots
-using Pandas    # Used for handliong the csv file (contains strings and numbers)
-using ProgressMeter # Used for making the progress meeter
 using DataFrames
-pyplot()            # Use the python plotting backend
+#using Pandas
 include("covidPlot2.jl")
-
-data_popStates = CSV.read("USA.csv" ; datarow = 2, delim=',')    # Read the population data from the united states
+pyplot()
+# reading the csv file
+data_popStates = CSV.read("USA.csv", DataFrame)    # Read the population data from the united states
 data_casesUSA  = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv", DataFrame)
 data_deathUSA  = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv", DataFrame)
 
-df = data_casesUSA.Province_State=="Ohio"
+data_popStates.Province .== "Ohio"
+n = size(data_popStates.Province,1); # Number to search through
+
+for state in data_popStates.Province
+    println(state)
+    casesDF = data_casesUSA[data_casesUSA.Province_State .== state,:]   # cases
+    deathDF = data_deathUSA[data_deathUSA.Province_State .== state,:]   # deaths
+    popDF   = data_popStates[data_popStates.Province .== state,:]
+    cases = casesDF[:,12:end]
+    death = deathDF[:,12:end]
+    popState   = popDF[1,2]
+    casesArray = convert(Array, cases[1:end,:])
+    casesState = sum(casesArray,dims=1)
+    deathArray = convert(Array, cases[1:end,:])
+    deathState = sum(deathArray,dims=1)
+    covidPlot2(casesState,deathState,popState,state)
+end
+
 
 #data_casesUSA   = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv",header=true)       # cases of COVID 19 in the USA
 #data_deathUSA   = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv",header=true)          # deaths in the USA from COVID 19

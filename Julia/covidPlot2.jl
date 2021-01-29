@@ -15,7 +15,7 @@ scatter!(1:size(cases)[2],
       yticks = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1,1e1,1e2],
       yaxis="Percent of Country", xaxis="Days since Jan 22",
       marker =:o,
-      color =:red)
+      color =:green)
 scatter!(1:size(cases)[2],
       100*death[1,:]./pop,lab=name*" COVID Deaths",
       scale=:log10,
@@ -23,12 +23,12 @@ scatter!(1:size(cases)[2],
       yaxis="Percent of Country", xaxis="Days since Jan 22",
       marker =:x,
       color =:black)
- plot!(xscale=:identity,xticks=0:10:100)
+ plot!(xscale=:identity,xticks=0:100:500, legend=:bottomright)
  labelCases = cases[1,end];
  labelDeath = death[1,end];
  annotate!(size(cases)[2]+5, 200*cases[1,end]./pop, ha="left",va="bottom","$labelCases")
  annotate!(size(cases)[2]+5, 200*death[1,end]./pop, ha="left",va="bottom","$labelDeath")
- xlims!((0,100))
+ xlims!((0,500))
  ylims!((1e-6,100))
- png(p1,"CountryFigures/$name.png")
+ png(p1,"Figures/UnitedStates/$name.png")
 end
