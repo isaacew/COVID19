@@ -14,7 +14,7 @@ clc
 close all
 plotFlag = 1;       % Plots on/off
 usaFlag = 1;        % Generate the Plots and look at USA
-countryFlag = 0;    % Generate the Plots and look at all Countries
+countryFlag = 1;    % Generate the Plots and look at all Countries
 
 % Pull the most up-to-date information
 !git submodule update --remote
@@ -294,4 +294,5 @@ totalTime = toc
 !git add .
 !git commit -m "added todays Country data"
 !git push
+!git remote prune origin && git repack && git prune-packed && git reflog expire --expire=1.month.ago && git gc --aggressive
 % % end
