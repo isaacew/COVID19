@@ -294,5 +294,5 @@ totalTime = toc
 !git add .
 !git commit -m "added todays Country data"
 !git push
-!git remote prune origin && git repack && git prune-packed && git reflog expire --expire=1.month.ago && git gc --aggressive
+!git remote prune origin && git repack && git prune-packed && git reflog expire --expire=1.w.ago && git gc --aggressive
 % % end
