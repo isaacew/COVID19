@@ -25,20 +25,115 @@ data_deathUSA  = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series
 data_popStates.Province .== "Ohio"
 n = size(data_popStates.Province,1); # Number to search through
 
-for state in data_popStates.Province
-    println(state)
-    casesDF = data_casesUSA[data_casesUSA.Province_State .== state,:]   # cases
-    deathDF = data_deathUSA[data_deathUSA.Province_State .== state,:]   # deaths
-    popDF   = data_popStates[data_popStates.Province .== state,:]
-    cases = casesDF[:,12:end]
-    death = deathDF[:,12:end]
-    popState   = popDF[1,2]
-    casesArray = convert(Array, cases[1:end,:])
-    casesState = sum(casesArray,dims=1)
-    deathArray = convert(Array, cases[1:end,:])
-    deathState = sum(deathArray,dims=1)
-    covidPlot2(casesState,deathState,popState,state)
-end
+
+state = "Ohio"
+println(state)
+casesDF = data_casesUSA[data_casesUSA.Province_State .== state,:]   # cases
+deathDF = data_deathUSA[data_deathUSA.Province_State .== state,:]   # deaths
+popDF   = data_popStates[data_popStates.Province .== state,:]
+cases = casesDF[:,12:end]
+death = deathDF[:,12:end]
+popState   = popDF[1,2]
+casesArray = convert(Array, cases[1:end,:])
+casesState = sum(casesArray,dims=1)
+deathArray = convert(Array, cases[1:end,:])
+deathState = sum(deathArray,dims=1)
+
+cases = casesState
+death = deathState
+pop = popState
+name = state
+p1 = plot()
+hspan!(p1,[0,1e2], color  = :red, alpha   = 0.6, labels = false);
+hspan!(p1,[0,1e1], color  = :white, alpha = 0.1, labels = false);
+hspan!(p1,[0,1e0], color  = :white, alpha = 0.1, labels = false);
+hspan!(p1,[0,1e-1], color = :white, alpha = 0.1, labels = false);
+hspan!(p1,[0,1e-2], color = :white, alpha = 0.1, labels = false);
+hspan!(p1,[0,1e-3], color = :white, alpha = 0.1, labels = false);
+hspan!(p1,[0,1e-4], color = :white, alpha = 0.1, labels = false);
+hspan!(p1,[0,1e-5], color = :white, alpha = 0.1, labels = false);
+hspan!(p1,[0,1e-6], color = :white, alpha = 0.1, labels = false);
+scatter!(1:size(cases)[2],
+      100*cases[1,:]./pop,lab=name*" COVID Cases",
+      scale=:log10,
+      yticks = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1,1e1,1e2],
+      yaxis="Percent of Country", xaxis="Days since Jan 22",
+      marker =:o,
+      color =:green)
+
+scatter!(1:size(death)[2],
+      100*death[1,|:]./pop,lab=name*" COVID Deaths",
+      scale=:log10,
+      yticks = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1,1e1,1e2],
+      yaxis="Percent of Country", xaxis="Days since Jan 22",
+      marker =:x,
+      color =:black)
+
+
+ plot!(xscale=:identity,xticks=0:100:500, legend=:bottomright)
+ labelCases = cases[1,end];
+ labelDeath = death[1,end];
+ annotate!(size(cases)[2]+5, 200*cases[1,end]./pop, ha="left",va="bottom","$labelCases")
+ annotate!(size(cases)[2]+5, 200*death[1,end]./pop, ha="left",va="bottom","$labelDeath")
+ xlims!((0,500))
+ ylims!((1e-6,100))
+ png(p1,"Figures/UnitedStates/$name.png")
+
+
+
+# for state in data_popStates.Province
+#     println(state)
+#     casesDF = data_casesUSA[data_casesUSA.Province_State .== state,:]   # cases
+#     deathDF = data_deathUSA[data_deathUSA.Province_State .== state,:]   # deaths
+#     popDF   = data_popStates[data_popStates.Province .== state,:]
+#     cases = casesDF[:,12:end]
+#     death = deathDF[:,12:end]
+#     popState   = popDF[1,2]
+#     casesArray = convert(Array, cases[1:end,:])
+#     casesState = sum(casesArray,dims=1)
+#     deathArray = convert(Array, cases[1:end,:])
+#     deathState = sum(deathArray,dims=1)
+#
+#     cases = casesState
+#     death = deathState
+#     pop = popState
+#     p1 = plot()
+#     hspan!(p1,[0,1e2], color  = :red, alpha   = 0.6, labels = false);
+#     hspan!(p1,[0,1e1], color  = :white, alpha = 0.1, labels = false);
+#     hspan!(p1,[0,1e0], color  = :white, alpha = 0.1, labels = false);
+#     hspan!(p1,[0,1e-1], color = :white, alpha = 0.1, labels = false);
+#     hspan!(p1,[0,1e-2], color = :white, alpha = 0.1, labels = false);
+#     hspan!(p1,[0,1e-3], color = :white, alpha = 0.1, labels = false);
+#     hspan!(p1,[0,1e-4], color = :white, alpha = 0.1, labels = false);
+#     hspan!(p1,[0,1e-5], color = :white, alpha = 0.1, labels = false);
+#     hspan!(p1,[0,1e-6], color = :white, alpha = 0.1, labels = false);
+#     scatter!(1:size(cases)[2],
+#           100*cases[1,:]./pop,lab=name*" COVID Cases",
+#           scale=:log10,
+#           yticks = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1,1e1,1e2],
+#           yaxis="Percent of Country", xaxis="Days since Jan 22",
+#           marker =:o,
+#           color =:green)
+#
+#     scatter!(1:size(cases)[2],
+#           100*death[1,:]./pop,lab=name*" COVID Deaths",
+#           scale=:log10,
+#           yticks = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1,1e1,1e2],
+#           yaxis="Percent of Country", xaxis="Days since Jan 22",
+#           marker =:x,
+#           color =:black)
+#      plot!(xscale=:identity,xticks=0:100:500, legend=:bottomright)
+#      labelCases = cases[1,end];
+#      labelDeath = death[1,end];
+#      annotate!(size(cases)[2]+5, 200*cases[1,end]./pop, ha="left",va="bottom","$labelCases")
+#      annotate!(size(cases)[2]+5, 200*death[1,end]./pop, ha="left",va="bottom","$labelDeath")
+#      xlims!((0,500))
+#      ylims!((1e-6,100))
+#      png(p1,"Figures/UnitedStates/$name.png")
+#
+#
+#     covidPlot2(casesState,deathState,popState,state)
+# end
 
 
 #data_casesUSA   = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv",header=true)       # cases of COVID 19 in the USA
