@@ -8,20 +8,39 @@
 #
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-cd("/Users/weintraub0/Documents/Projects/COVID19/COVID-19")
-run(`git pull`)    # Get the latest data
-cd("/Users/weintraub0/Documents/Projects/COVID19/")
+;cd("/Users/weintraub0/Documents/Projects/COVID19/COVID-19")
+;run(`git pull`)    # Get the latest data
+;cd("/Users/weintraub0/Documents/Projects/COVID19/")
 using CSV           # Need to read the CSV data
 using Plots         # Allows the genation of plots
+using BenchmarkTools
 using DataFrames
+using DelimitedFiles
+using CSV
+using XLSX
+# Focusing on how to read data into julia
+# What are the common data structures
+
 #using Pandas
 include("covidPlot2.jl")
 pyplot()
-# reading the csv file
+
+
+# Read the CSV Data
+# This is the method that you would want to use if you don't want to use dataframes (slower than dataframes)
+P_popStates,H_popStates = readdlm("USA.csv",',',;header=true)
+P_casesUSA,H_casesUSA = readdlm("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv",',',;header=true)
+P_deathUSA,H_deathUSA = readdlm("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv",',',;header=true)
+
+# Read the CSV Data
+# This is the method you should use if you want to use dataframes (faster than the array method)
 data_popStates = CSV.read("USA.csv", DataFrame)    # Read the population data from the united states
 data_casesUSA  = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv", DataFrame)
 data_deathUSA  = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv", DataFrame)
 
+# data_popStates[!,:Province] # Prints the list of the provinces in the dataframe
+# data_popStates.Province     # Another way to list the provinces in the dataframe
+# names(data_popStates)       # prints the names for the columns in the dataframe
 data_popStates.Province .== "Ohio"
 n = size(data_popStates.Province,1); # Number to search through
 
