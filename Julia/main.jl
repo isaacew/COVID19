@@ -13,90 +13,158 @@
 ;cd("/Users/weintraub0/Documents/Projects/COVID19/")
 using CSV           # Need to read the CSV data
 using Plots         # Allows the genation of plots
+gr()
+
+
 using BenchmarkTools
 using DataFrames
 using DelimitedFiles
-using CSV
-using XLSX
+
+ENV["MPLBACKEND"]="agg"
+#pygui(true)
 # Focusing on how to read data into julia
 # What are the common data structures
 
 #using Pandas
 include("covidPlot2.jl")
-pyplot()
 
+# # Read the CSV Data (ARRAY)
+# # This is the method that you would want to use if you don't want to use dataframes (slower than dataframes)
+# P_popStates,H_popStates = readdlm("USA.csv",',',;header=true)
+# P_casesUSA,H_casesUSA = readdlm("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv",',',;header=true)
+# P_deathUSA,H_deathUSA = readdlm("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv",',',;header=true)
 
-# Read the CSV Data
-# This is the method that you would want to use if you don't want to use dataframes (slower than dataframes)
-P_popStates,H_popStates = readdlm("USA.csv",',',;header=true)
-P_casesUSA,H_casesUSA = readdlm("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv",',',;header=true)
-P_deathUSA,H_deathUSA = readdlm("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv",',',;header=true)
-
-# Read the CSV Data
+# Read the CSV Data (DATAFRAME)
 # This is the method you should use if you want to use dataframes (faster than the array method)
-data_popStates = CSV.read("USA.csv", DataFrame)    # Read the population data from the united states
-data_casesUSA  = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv", DataFrame)
-data_deathUSA  = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv", DataFrame)
+DFpopStates = CSV.read("USA.csv", DataFrame)    # Read the population data from the united states
+DFcasesUSA  = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv", DataFrame)
+DFdeathUSA  = CSV.read("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv", DataFrame)
 
-# data_popStates[!,:Province] # Prints the list of the provinces in the dataframe
-# data_popStates.Province     # Another way to list the provinces in the dataframe
-# names(data_popStates)       # prints the names for the columns in the dataframe
-data_popStates.Province .== "Ohio"
-n = size(data_popStates.Province,1); # Number to search through
+# DFpopStates[!,:Province] # Prints the list of the provinces in the dataframe
+# DFpopStates.Province     # Another way to list the provinces in the dataframe
+# names(DFpopStates)       # prints the names for the columns in the dataframe
+# describe(DFpopStates)    # prints a summary of the data in compact way
+
+function getPopulation(P_df,Name::String)
+# This fuction returns the populatino of a Provice (String) to a provided DataFrame
+      loc = findfirst(P_df.Province .== Name)
+      !isnothing(loc) && return P_df.Population[loc]
+      error("Error: Province Not Found")
+end
+
+function getIndex(DF,Name::String)
+      loc = findall(DFcasesUSA.Province_State .== Name)
+      !isnothing(loc) && return DFcasesUSA.Province_State .== Name
+      error("Error: Province Not Found")
+end
+
+numProvinces = length(DFpopStates.Province);          # Get the total number of provinces
+for name in DFpopStates.Province                      # Run a for loop over the states
+      population = getPopulation(DFpopStates,name)    # Population of the Province
+      indexCasesUSA = getIndex(DFcasesUSA,name)       # Index for that Province (Cases)
+      indexDeathUSA = getIndex(DFdeathUSA,name)       # Index for that Province (Deaths)
+      cases = DFcasesUSA[indexCasesUSA,12:end]        # cases of the Province
+      death = DFdeathUSA[indexDeathUSA,12:end]        # deaths of the Province
+      casesProvince = sum(Array(cases),dims=1)        # cases of the Province (Array)
+      deathProvince = sum(Array(death),dims=1)        # deaths of the Province (Array)
+      println("$name Cases: $(casesProvince[end]) Deaths: $(deathProvince[end])")   #     Message of the current state
+      p1 = plot()
+      hspan!(p1,[0,1e2], color  = :red, alpha   = 0.6, labels = false);
+      hspan!(p1,[0,1e1], color  = :white, alpha = 0.1, labels = false);
+      hspan!(p1,[0,1e0], color  = :white, alpha = 0.1, labels = false);
+      hspan!(p1,[0,1e-1], color = :white, alpha = 0.1, labels = false);
+      hspan!(p1,[0,1e-2], color = :white, alpha = 0.1, labels = false);
+      hspan!(p1,[0,1e-3], color = :white, alpha = 0.1, labels = false);
+      hspan!(p1,[0,1e-4], color = :white, alpha = 0.1, labels = false);
+      hspan!(p1,[0,1e-5], color = :white, alpha = 0.1, labels = false);
+      hspan!(p1,[0,1e-6], color = :white, alpha = 0.1, labels = false);
+      plot!(casesProvince[1,2:end]./population.*100,lab="Cases",
+            yscale=:log10,
+            xscale=:identity,
+            color=:black)
+      ylims!((1e-6,1))
+      plot!(deathProvince[1,2:end]./population.*100,lab="Deaths",
+            yscale=:log10,
+            xscale=:identity,
+            legend=:bottomright,
+            color=:blue,
+            yticks = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1,1e1,1e2],
+            yaxis="Percent of Population")
+      ylims!((1e-6,100))
+      xlims!((1,90+length(casesProvince)))
+      title!(name)
+      annotate!(size(casesProvince)[2]+5, 
+            200*casesProvince[1,end]./population, 
+            ha="left",
+            va="bottom",
+            "$(casesProvince[end])")
+      annotate!(size(deathProvince)[2]+5, 
+            200*deathProvince[1,end]./population, 
+            ha="left",
+            va="bottom",
+            "$(deathProvince[end])")
+      savefig(p1,"Figures/UnitedStates/$name.png")
+end
+
+# USA PLOT
 
 
-state = "Ohio"
-println(state)
-casesDF = data_casesUSA[data_casesUSA.Province_State .== state,:]   # cases
-deathDF = data_deathUSA[data_deathUSA.Province_State .== state,:]   # deaths
-popDF   = data_popStates[data_popStates.Province .== state,:]
-cases = casesDF[:,12:end]
-death = deathDF[:,12:end]
-popState   = popDF[1,2]
-casesArray = convert(Array, cases[1:end,:])
-casesState = sum(casesArray,dims=1)
-deathArray = convert(Array, cases[1:end,:])
-deathState = sum(deathArray,dims=1)
-
-cases = casesState
-death = deathState
-pop = popState
-name = state
-p1 = plot()
-hspan!(p1,[0,1e2], color  = :red, alpha   = 0.6, labels = false);
-hspan!(p1,[0,1e1], color  = :white, alpha = 0.1, labels = false);
-hspan!(p1,[0,1e0], color  = :white, alpha = 0.1, labels = false);
-hspan!(p1,[0,1e-1], color = :white, alpha = 0.1, labels = false);
-hspan!(p1,[0,1e-2], color = :white, alpha = 0.1, labels = false);
-hspan!(p1,[0,1e-3], color = :white, alpha = 0.1, labels = false);
-hspan!(p1,[0,1e-4], color = :white, alpha = 0.1, labels = false);
-hspan!(p1,[0,1e-5], color = :white, alpha = 0.1, labels = false);
-hspan!(p1,[0,1e-6], color = :white, alpha = 0.1, labels = false);
-scatter!(1:size(cases)[2],
-      100*cases[1,:]./pop,lab=name*" COVID Cases",
-      scale=:log10,
-      yticks = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1,1e1,1e2],
-      yaxis="Percent of Country", xaxis="Days since Jan 22",
-      marker =:o,
-      color =:green)
-
-scatter!(1:size(death)[2],
-      100*death[1,|:]./pop,lab=name*" COVID Deaths",
-      scale=:log10,
-      yticks = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1,1e1,1e2],
-      yaxis="Percent of Country", xaxis="Days since Jan 22",
-      marker =:x,
-      color =:black)
+# data_popStates.Province .== "Ohio"
+# n = size(data_popStates.Province,1); # Number to search through
 
 
- plot!(xscale=:identity,xticks=0:100:500, legend=:bottomright)
- labelCases = cases[1,end];
- labelDeath = death[1,end];
- annotate!(size(cases)[2]+5, 200*cases[1,end]./pop, ha="left",va="bottom","$labelCases")
- annotate!(size(cases)[2]+5, 200*death[1,end]./pop, ha="left",va="bottom","$labelDeath")
- xlims!((0,500))
- ylims!((1e-6,100))
- png(p1,"Figures/UnitedStates/$name.png")
+# state = "Ohio"
+# println(state)
+# casesDF = data_casesUSA[data_casesUSA.Province_State .== state,:]   # cases
+# deathDF = data_deathUSA[data_deathUSA.Province_State .== state,:]   # deaths
+# popDF   = data_popStates[data_popStates.Province .== state,:]
+# cases = casesDF[:,12:end]
+# death = deathDF[:,12:end]
+# popState   = popDF[1,2]
+# casesArray = convert(Array, cases[1:end,:])
+# casesState = sum(casesArray,dims=1)
+# deathArray = convert(Array, cases[1:end,:])
+# deathState = sum(deathArray,dims=1)
+
+# cases = casesState
+# death = deathState
+# pop = popState
+# name = state
+# p1 = plot()
+# hspan!(p1,[0,1e2], color  = :red, alpha   = 0.6, labels = false);
+# hspan!(p1,[0,1e1], color  = :white, alpha = 0.1, labels = false);
+# hspan!(p1,[0,1e0], color  = :white, alpha = 0.1, labels = false);
+# hspan!(p1,[0,1e-1], color = :white, alpha = 0.1, labels = false);
+# hspan!(p1,[0,1e-2], color = :white, alpha = 0.1, labels = false);
+# hspan!(p1,[0,1e-3], color = :white, alpha = 0.1, labels = false);
+# hspan!(p1,[0,1e-4], color = :white, alpha = 0.1, labels = false);
+# hspan!(p1,[0,1e-5], color = :white, alpha = 0.1, labels = false);
+# hspan!(p1,[0,1e-6], color = :white, alpha = 0.1, labels = false);
+# scatter!(1:size(cases)[2],
+#       100*cases[1,:]./pop,lab=name*" COVID Cases",
+#       scale=:log10,
+#       yticks = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1,1e1,1e2],
+#       yaxis="Percent of Country", xaxis="Days since Jan 22",
+#       marker =:o,
+#       color =:green)
+
+# scatter!(1:size(death)[2],
+#       100*death[1,|:]./pop,lab=name*" COVID Deaths",
+#       scale=:log10,
+#       yticks = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1,1e1,1e2],
+#       yaxis="Percent of Country", xaxis="Days since Jan 22",
+#       marker =:x,
+#       color =:black)
+
+
+#  plot!(xscale=:identity,xticks=0:100:500, legend=:bottomright)
+#  labelCases = cases[1,end];
+#  labelDeath = death[1,end];
+#  annotate!(size(cases)[2]+5, 200*cases[1,end]./pop, ha="left",va="bottom","$labelCases")
+#  annotate!(size(cases)[2]+5, 200*death[1,end]./pop, ha="left",va="bottom","$labelDeath")
+#  xlims!((0,500))
+#  ylims!((1e-6,100))
+#  png(p1,"Figures/UnitedStates/$name.png")
 
 
 
