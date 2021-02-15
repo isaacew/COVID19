@@ -8,19 +8,23 @@
 #
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# using Pkg
+# cd(@__DIR__)
+# Pkg.activate(".")
+# Pkg.instantiate()
+
 ;cd("/Users/weintraub0/Documents/Projects/COVID19/COVID-19")
 ;run(`git pull`)    # Get the latest data
 ;cd("/Users/weintraub0/Documents/Projects/COVID19/")
 using CSV           # Need to read the CSV data
-using Plots         # Allows the genation of plots
-gr()
-
+using Plots         # Allows the genation of plots]
+pyplot()
 
 using BenchmarkTools
 using DataFrames
 using DelimitedFiles
 
-ENV["MPLBACKEND"]="agg"
+#ENV["MPLBACKEND"]="agg"
 #pygui(true)
 # Focusing on how to read data into julia
 # What are the common data structures
@@ -31,7 +35,7 @@ include("covidPlot2.jl")
 # # Read the CSV Data (ARRAY)
 # # This is the method that you would want to use if you don't want to use dataframes (slower than dataframes)
 # P_popStates,H_popStates = readdlm("USA.csv",',',;header=true)
-# P_casesUSA,H_casesUSA = readdlm("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv",',',;header=true)
+# P_casesUSA,H_casesUSA = readdlm("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv",',',;header=true) 
 # P_deathUSA,H_deathUSA = readdlm("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv",',',;header=true)
 
 # Read the CSV Data (DATAFRAME)
@@ -59,52 +63,56 @@ function getIndex(DF,Name::String)
 end
 
 numProvinces = length(DFpopStates.Province);          # Get the total number of provinces
-for name in DFpopStates.Province                      # Run a for loop over the states
-      population = getPopulation(DFpopStates,name)    # Population of the Province
-      indexCasesUSA = getIndex(DFcasesUSA,name)       # Index for that Province (Cases)
-      indexDeathUSA = getIndex(DFdeathUSA,name)       # Index for that Province (Deaths)
-      cases = DFcasesUSA[indexCasesUSA,12:end]        # cases of the Province
-      death = DFdeathUSA[indexDeathUSA,12:end]        # deaths of the Province
-      casesProvince = sum(Array(cases),dims=1)        # cases of the Province (Array)
-      deathProvince = sum(Array(death),dims=1)        # deaths of the Province (Array)
+
+p1 = nothing
+for name in DFpopStates.Province             # Run a for loop over the states
+      global p1
+      population = getPopulation(DFpopStates,name)   # Population
+      indexCasesUSA = getIndex(DFcasesUSA,name)      # Index (Cases)
+      indexDeathUSA = getIndex(DFdeathUSA,name)      # Index (Deaths)
+      cases = DFcasesUSA[indexCasesUSA,12:end]       # cases 
+      death = DFdeathUSA[indexDeathUSA,12:end]       # deaths 
+      casesProvince = sum(Array(cases),dims=1)       # cases  (Array)
+      deathProvince = sum(Array(death),dims=1)       # deaths (Array)
       println("$name Cases: $(casesProvince[end]) Deaths: $(deathProvince[end])")   #     Message of the current state
       p1 = plot()
-      hspan!(p1,[0,1e2], color  = :red, alpha   = 0.6, labels = false);
-      hspan!(p1,[0,1e1], color  = :white, alpha = 0.1, labels = false);
-      hspan!(p1,[0,1e0], color  = :white, alpha = 0.1, labels = false);
-      hspan!(p1,[0,1e-1], color = :white, alpha = 0.1, labels = false);
-      hspan!(p1,[0,1e-2], color = :white, alpha = 0.1, labels = false);
-      hspan!(p1,[0,1e-3], color = :white, alpha = 0.1, labels = false);
-      hspan!(p1,[0,1e-4], color = :white, alpha = 0.1, labels = false);
-      hspan!(p1,[0,1e-5], color = :white, alpha = 0.1, labels = false);
-      hspan!(p1,[0,1e-6], color = :white, alpha = 0.1, labels = false);
-      plot!(casesProvince[1,2:end]./population.*100,lab="Cases",
-            yscale=:log10,
+      hspan!(p1,[0,1e2], color  = :red, alpha   = 0.6, lab = nothing);
+      hspan!(p1,[0,1e1], color  = :white, alpha = 0.1, lab = nothing);
+      hspan!(p1,[0,1e0], color  = :white, alpha = 0.1, lab = nothing);
+      hspan!(p1,[0,1e-1], color = :white, alpha = 0.1, lab = nothing);
+      hspan!(p1,[0,1e-2], color = :white, alpha = 0.1, lab = nothing);
+      hspan!(p1,[0,1e-3], color = :white, alpha = 0.1, lab = nothing);
+      hspan!(p1,[0,1e-4], color = :white, alpha = 0.1, lab = nothing);
+      hspan!(p1,[0,1e-5], color = :white, alpha = 0.1, lab = nothing);
+      hspan!(p1,[0,1e-6], color = :white, alpha = 0.1, lab = nothing);
+      plot!(casesProvince[1,2:end]./population.*100,
+            lab="Cases",
+            #yscale=:log10,
             xscale=:identity,
             color=:black)
-      ylims!((1e-6,1))
-      plot!(deathProvince[1,2:end]./population.*100,lab="Deaths",
-            yscale=:log10,
+      plot!(deathProvince[1,2:end]./population.*100,
+            lab="Deaths",
+            #yscale=:log10,
             xscale=:identity,
             legend=:bottomright,
             color=:blue,
             yticks = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1,1e1,1e2],
             yaxis="Percent of Population")
+      title!(name)
+      annotate!((size(casesProvince)[2]+5, 
+                  casesProvince[1,end]./population.*100, 
+                  "$(casesProvince[end])"))
+      annotate!((size(deathProvince)[2]+5, 
+                  deathProvince[1,end]./population.*100,
+                  "$(deathProvince[end])"))
+      
       ylims!((1e-6,100))
       xlims!((1,90+length(casesProvince)))
-      title!(name)
-      annotate!(size(casesProvince)[2]+5, 
-            200*casesProvince[1,end]./population, 
-            ha="left",
-            va="bottom",
-            "$(casesProvince[end])")
-      annotate!(size(deathProvince)[2]+5, 
-            200*deathProvince[1,end]./population, 
-            ha="left",
-            va="bottom",
-            "$(deathProvince[end])")
+      plot!(yscale=:log10)
       savefig(p1,"Figures/UnitedStates/$name.png")
+      gui()
 end
+
 
 # USA PLOT
 
