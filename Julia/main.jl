@@ -18,7 +18,8 @@
 ;cd("/Users/weintraub0/Documents/Projects/COVID19/")
 using CSV           # Need to read the CSV data
 using Plots         # Allows the genation of plots]
-pyplot()
+using PlotlyJS
+plotlyjs()
 
 using BenchmarkTools
 using DataFrames
@@ -35,7 +36,7 @@ include("covidPlot2.jl")
 # # Read the CSV Data (ARRAY)
 # # This is the method that you would want to use if you don't want to use dataframes (slower than dataframes)
 # P_popStates,H_popStates = readdlm("USA.csv",',',;header=true)
-# P_casesUSA,H_casesUSA = readdlm("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv",',',;header=true) 
+# P_casesUSA,H_casesUSA = readdlm("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv",',',;header=true)
 # P_deathUSA,H_deathUSA = readdlm("COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv",',',;header=true)
 
 # Read the CSV Data (DATAFRAME)
@@ -70,8 +71,8 @@ for name in DFpopStates.Province             # Run a for loop over the states
       population = getPopulation(DFpopStates,name)   # Population
       indexCasesUSA = getIndex(DFcasesUSA,name)      # Index (Cases)
       indexDeathUSA = getIndex(DFdeathUSA,name)      # Index (Deaths)
-      cases = DFcasesUSA[indexCasesUSA,12:end]       # cases 
-      death = DFdeathUSA[indexDeathUSA,12:end]       # deaths 
+      cases = DFcasesUSA[indexCasesUSA,12:end]       # cases
+      death = DFdeathUSA[indexDeathUSA,12:end]       # deaths
       casesProvince = sum(Array(cases),dims=1)       # cases  (Array)
       deathProvince = sum(Array(death),dims=1)       # deaths (Array)
       println("$name Cases: $(casesProvince[end]) Deaths: $(deathProvince[end])")   #     Message of the current state
@@ -99,13 +100,13 @@ for name in DFpopStates.Province             # Run a for loop over the states
             yticks = [1e-6,1e-5,1e-4,1e-3,1e-2,1e-1,1,1e1,1e2],
             yaxis="Percent of Population")
       title!(name)
-      annotate!((size(casesProvince)[2]+5, 
-                  casesProvince[1,end]./population.*100, 
+      annotate!((size(casesProvince)[2]+5,
+                  casesProvince[1,end]./population.*100,
                   "$(casesProvince[end])"))
-      annotate!((size(deathProvince)[2]+5, 
+      annotate!((size(deathProvince)[2]+5,
                   deathProvince[1,end]./population.*100,
                   "$(deathProvince[end])"))
-      
+
       ylims!((1e-6,100))
       xlims!((1,90+length(casesProvince)))
       plot!(yscale=:log10)
