@@ -20,7 +20,7 @@ countryFlag = 1;    % Generate the Plots and look at all Countries
 !git submodule update --remote
 cd('COVID-19')
 !git pull
-cd('/Users/weintraub0/Documents/Projects/COVID19')
+cd('/Users/weintraub0/Documents/Weintraub/Projects/COVID19')
 [status cmdout] =  git('submodule update --remote');
 % if status = 0
 %     disp('Nothing New Reported')
